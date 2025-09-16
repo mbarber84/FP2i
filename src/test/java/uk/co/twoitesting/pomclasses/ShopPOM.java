@@ -8,10 +8,13 @@ import io.qameta.allure.Allure;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import uk.co.twoitesting.utilities.Helpers;
 // Import Java classes for file handling
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static uk.co.twoitesting.utilities.Helpers.scrollIntoView;
 
 // Define ShopPOM class for actions on the shop page
 public class ShopPOM {
@@ -24,7 +27,7 @@ public class ShopPOM {
     // Locators for different elements on the shop page
     private By shopLink = By.linkText("Shop");             // Link to open Shop page
     private By dismissBanner = By.linkText("Dismiss");     // Link to dismiss popup/banner
-    private By poloAddButton = By.xpath("//*[@id=\"main\"]/ul/li[9]/a[2]"); // Button to add Polo Shirt
+    private By poloAddButton = By.cssSelector("li.product:nth-child(9) > a:nth-child(2)"); // Button to add Polo Shirt
 
     // Constructor to set up ShopPOM with browser driver and wait
     public ShopPOM(WebDriver driver, WebDriverWait wait) {
@@ -35,8 +38,13 @@ public class ShopPOM {
     // Method to open the Shop page, annotated for Allure reporting
     @Step("Open the Shop page")
     public void openShop() {
-        // Wait until the shop link is clickable, then click it
-        wait.until(ExpectedConditions.elementToBeClickable(shopLink)).click();
+        WebElement shop = wait.until(ExpectedConditions.elementToBeClickable(shopLink));
+        Helpers.scrollIntoView(driver, shop);
+        try {
+            shop.click();
+        } catch (ElementClickInterceptedException e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", shop);
+        }
     }
 
     // Method to dismiss popup/banner if it appears
