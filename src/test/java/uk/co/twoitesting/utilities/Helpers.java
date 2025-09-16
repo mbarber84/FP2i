@@ -1,0 +1,58 @@
+// Define the package where this class belongs
+package uk.co.twoitesting.utilities;
+
+// Import Allure classes for reporting attachments
+import io.qameta.allure.Allure;
+// Import Selenium classes for taking screenshots
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.io.FileHandler;
+// Import Java classes for file handling and date formatting
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+// Define Helpers class with utility methods
+public class Helpers {
+
+    // Method to extract numeric value from a price string like "£12.34"
+    public static double extractPrice(String priceText) {
+        // Remove £ sign, minus sign, extra spaces, then convert to double
+        return Double.parseDouble(priceText.replace("£", "").replace("-", "").trim());
+    }
+
+    // Method to take a screenshot, save locally, and attach to Allure report
+    public static void takeScreenshot(WebDriver driver, String name) {
+        try {
+            // Take screenshot and store it as a temporary file
+            File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+
+            // Create folder "screenshots" if it doesn't exist
+            File destDir = new File("screenshots");
+            if (!destDir.exists()) {
+                destDir.mkdir();
+            }
+
+            // Generate a filename with timestamp to avoid overwriting
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            File destFile = new File(destDir, name + "_" + timestamp + ".png");
+
+            // Copy the screenshot file to the screenshots folder
+            FileHandler.copy(src, destFile);
+
+            // Print message with screenshot path
+            System.out.println(" Screenshot saved: " + destFile.getAbsolutePath());
+
+            // Attach the screenshot to Allure report for test evidence
+            Allure.addAttachment(name + "_" + timestamp,
+                    new ByteArrayInputStream(((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES)));
+
+        } catch (IOException e) {
+            // Print error if saving screenshot fails
+            System.out.println(" Failed to save screenshot: " + e.getMessage());
+        }
+    }
+}
