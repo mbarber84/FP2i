@@ -1,62 +1,74 @@
 // Define the package where this class belongs
 package uk.co.twoitesting.pomclasses;
 
-// Import Selenium classes for web elements and waits
+// Import Selenium classes for interacting with web elements and handling waits
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+// Import utility classes for configuration and helper functions
 import uk.co.twoitesting.utilities.ConfigLoader;
 import uk.co.twoitesting.utilities.Helpers;
 
-// Define LoginPOM class for actions on the login page
+// Define the LoginPOM class for performing actions on the login page
 public class LoginPOM {
 
-    // Store the browser driver to control the browser
+    // Store the browser driver instance to control browser actions
     private WebDriver driver;
-    // Store WebDriverWait to wait for elements to appear
+
+    // Store WebDriverWait instance to handle explicit waits
     private WebDriverWait wait;
 
-    // Locators for username, password fields, and login button
-    private By usernameField = By.id("username"); // Username input
-    private By passwordField = By.id("password"); // Password input
-    private By loginButton = By.name("login");   // Login button
-    private By logoutButton = By.linkText("Logout");
+    // Locators for login page elements
+    private By usernameField = By.id("username"); // Locator for username input field
+    private By passwordField = By.id("password"); // Locator for password input field
+    private By loginButton = By.name("login");    // Locator for login button
+    private By logoutButton = By.linkText("Logout"); // Locator for logout link (to verify login)
 
-    // Constructor to set up LoginPOM with browser driver and wait
+    // Constructor to initialize the LoginPOM with browser driver and wait
     public LoginPOM(WebDriver driver, WebDriverWait wait) {
-        this.driver = driver; // Save driver
-        this.wait = wait;     // Save wait
+        this.driver = driver; // Save WebDriver instance
+        this.wait = wait;     // Save WebDriverWait instance
     }
 
-    // Method to open the login page
+    // Method to open the login page in the browser
     public void open() {
-        driver.get(ConfigLoader.get("base.url") + "/my-account/"); // Go to login page
+        driver.get(ConfigLoader.get("base.url") + "/my-account/");
+        // Navigate to login page URL (base URL + /my-account/)
     }
 
-    // Method to log in
-    // Login using credentials from ConfigLoader
+    // Method to log in using credentials from config.properties
     public boolean login() {
         try {
+            // Wait until the username field is visible, then enter the username
             wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField))
                     .sendKeys(ConfigLoader.get("username"));
+
+            // Enter the password into the password field
             driver.findElement(passwordField).sendKeys(ConfigLoader.get("password"));
+
+            // Click the login button
             driver.findElement(loginButton).click();
-            return true; // Login attempted successfully
+
+            return true; // Return true if login attempted successfully
         } catch (Exception e) {
+            // Handle any exceptions (e.g., element not found, timeout)
             System.out.println("Login failed: " + e.getMessage());
-            Helpers.takeScreenshot(driver, "LoginError"); // Take screenshot for debugging
-            return false; // Login failed
+            Helpers.takeScreenshot(driver, "LoginError");
+            // Take a screenshot for debugging purposes
+            return false; // Return false if login failed
         }
     }
 
-    // Check if user is logged in by waiting for logout button
+    // Method to check if the user is logged in
     public boolean isUserLoggedIn() {
         try {
+            // Wait until logout button is visible
             wait.until(ExpectedConditions.visibilityOfElementLocated(logoutButton));
-            return true;
+            return true; // Logout button found → user is logged in
         } catch (Exception e) {
-            return false;
+            return false; // Logout button not found → user is not logged in
         }
     }
 }
