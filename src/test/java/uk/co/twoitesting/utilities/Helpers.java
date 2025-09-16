@@ -4,9 +4,7 @@ package uk.co.twoitesting.utilities;
 // Import Allure classes for reporting attachments
 import io.qameta.allure.Allure;
 // Import Selenium classes for taking screenshots
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.io.FileHandler;
 // Import Java classes for file handling and date formatting
 import java.io.ByteArrayInputStream;
@@ -54,5 +52,10 @@ public class Helpers {
             // Print error if saving screenshot fails
             System.out.println(" Failed to save screenshot: " + e.getMessage());
         }
+    }
+    // Scroll an element into view (centered)
+    public static void scrollIntoView(WebDriver driver, WebElement element) {
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block: 'center', inline: 'center'});", element);
     }
 }
