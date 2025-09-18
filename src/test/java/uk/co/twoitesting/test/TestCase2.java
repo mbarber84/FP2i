@@ -66,6 +66,10 @@ public class TestCase2 extends BaseTests {
         boolean orderFound = driver.getPageSource().contains(orderNumber); // Check if page source contains order number
         assertThat("Order " + orderNumber + " should appear in My Account -> Orders", orderFound, is(true));
 
+        // Empty the cart before logging out
+        emptyCart();
+        Helpers.takeScreenshot(driver, "Cart Emptied");
+
         //Log out from account
         accountPOM.logout();
         Helpers.takeScreenshot(driver, "Logged Out"); // Take screenshot after logout
