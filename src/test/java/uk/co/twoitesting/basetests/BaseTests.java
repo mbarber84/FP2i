@@ -12,10 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 // Import Page Object Model (POM) classes
-import uk.co.twoitesting.pomclasses.AccountPOM;
-import uk.co.twoitesting.pomclasses.CartPOM;
-import uk.co.twoitesting.pomclasses.LoginPOM;
-import uk.co.twoitesting.pomclasses.ShopPOM;
+import uk.co.twoitesting.pomclasses.*;
 
 // Import helper utilities
 import uk.co.twoitesting.utilities.Helpers;
@@ -35,6 +32,8 @@ public class BaseTests {
     protected AccountPOM accountPOM;
     // Declare Helpers instance for utility functions
     protected Helpers helpers;
+
+    protected NavPOM navPOM;
 
     // Method that runs before each test
     @BeforeEach
@@ -65,6 +64,8 @@ public class BaseTests {
         shopPOM = new ShopPOM(driver, wait);
         cartPOM = new CartPOM(driver, wait, helpers);
         accountPOM = new AccountPOM(driver);
+
+        navPOM = new NavPOM(driver, wait);
 
         // Ensure the shopping cart is empty before starting tests
         emptyCart();

@@ -36,17 +36,23 @@ public class TestCase2 extends BaseTests {
         Assertions.assertTrue(driver.getPageSource().contains("Logout"), "User should be logged in after login");
 
         //Add Polo Shirt to cart
-        shopPOM.openShop();               // Open shop page
+        navPOM.goToShop();
+        //shopPOM.openShop();               // Open shop page
         shopPOM.dismissPopupIfPresent();  // Close any popup if it appears
-        shopPOM.addPoloToCart();          // Add Polo Shirt to cart
-        shopPOM.viewCart();               // View the cart
+        shopPOM.addProductToCart("Polo");
+
+        //shopPOM.addPoloToCart();          // Add Polo Shirt to cart
+        //shopPOM.viewCart();               // View the cart
+        navPOM.goToCart();
         Helpers.takeScreenshot(driver, "Cart Ready"); // Take screenshot of cart
 
         //Initialize checkout page object
         checkoutPOM = new CheckoutPOM(driver, wait);
 
         //Go to the checkout page
-        driver.get(ConfigLoader.get("base.url") + "/checkout/");
+        //driver.get(ConfigLoader.get("base.url") + "/checkout/");
+
+        navPOM.goToCheckout();
 
         //Fill in billing details from config.properties
         checkoutPOM.fillBillingDetailsFromConfig();
@@ -62,6 +68,7 @@ public class TestCase2 extends BaseTests {
         String orderNumber = checkoutPOM.captureOrderNumber();
 
         //Go to My Account -> Orders to check if order appears
+        navPOM.goToMyAccount();
         driver.get("https://www.edgewordstraining.co.uk/demo-site/my-account/orders/");
         boolean orderFound = driver.getPageSource().contains(orderNumber); // Check if page source contains order number
         assertThat("Order " + orderNumber + " should appear in My Account -> Orders", orderFound, is(true));

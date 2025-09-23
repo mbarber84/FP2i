@@ -60,14 +60,25 @@ public class ShopPOM {
     }
 
     // Method to add Polo Shirt to the cart
-    @Step("Add Polo Shirt to cart")
-    public void addPoloToCart() {
-        // Wait until the add button is present in the page DOM
-        WebElement addButton = wait.until(ExpectedConditions.presenceOfElementLocated(poloAddButton));
-        // Scroll the add button into view using JavaScript
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", addButton);
-        // Wait until the add button is clickable, then click it
-        wait.until(ExpectedConditions.elementToBeClickable(addButton)).click();
+//    @Step("Add Polo Shirt to cart")
+//    public void addPoloToCart() {
+//        // Wait until the add button is present in the page DOM
+//        WebElement addButton = wait.until(ExpectedConditions.presenceOfElementLocated(poloAddButton));
+//        // Scroll the add button into view using JavaScript
+//        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", addButton);
+//        // Wait until the add button is clickable, then click it
+//        wait.until(ExpectedConditions.elementToBeClickable(addButton)).click();
+//    }
+
+    @Step("Add {productName} to cart")
+    public void addProductToCart(String productName) {
+        // Build dynamic aria-label locator
+        String ariaLabel = String.format("Add “%s” to your cart", productName);
+        By addButton = By.cssSelector("[aria-label='" + ariaLabel + "']");
+
+        WebElement button = wait.until(ExpectedConditions.presenceOfElementLocated(addButton));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+        wait.until(ExpectedConditions.elementToBeClickable(button)).click();
     }
 
     // Method to click the "View cart" link

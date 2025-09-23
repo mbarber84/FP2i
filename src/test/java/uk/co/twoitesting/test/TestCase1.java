@@ -37,10 +37,13 @@ public class TestCase1 extends BaseTests {
 
         //First coupon test
         Allure.step("Add item and apply first discount", () -> {
-            shopPOM.openShop();              // Go to the shop page
-            shopPOM.dismissPopupIfPresent(); // Close popup if it appears
-            shopPOM.addPoloToCart();         // Add Polo Shirt to cart
-            shopPOM.viewCart();              // Go to cart page
+            navPOM.goToShop();
+            //shopPOM.openShop();              // Go to the shop page
+            shopPOM.dismissPopupIfPresent();// Close popup if it appears
+            shopPOM.addProductToCart("Polo"); //add any product name here !!! NEW CODE
+            //shopPOM.addPoloToCart();         // Add Polo Shirt to cart
+           // shopPOM.viewCart();              // Go to cart page
+            navPOM.goToCart();
 
             Helpers.takeScreenshot(driver, "Cart With Polo"); // Save screenshot of cart
 
@@ -65,9 +68,13 @@ public class TestCase1 extends BaseTests {
 
         //Second coupon test
         Allure.step("Add Polo Shirt again and apply second discount", () -> {
-            shopPOM.openShop();   // Go back to shop
-            shopPOM.addPoloToCart(); // Add Polo Shirt again
-            shopPOM.viewCart();      // Open cart
+            navPOM.goToShop();
+            //shopPOM.openShop();   // Go back to shop
+
+            shopPOM.addProductToCart("Polo"); // add any item name NEW CODE
+            navPOM.goToCart();
+            //shopPOM.addPoloToCart(); // Add Polo Shirt again
+            //shopPOM.viewCart();      // Open cart
 
             Helpers.takeScreenshot(driver, "Cart With Polo Again"); // Screenshot again
 
