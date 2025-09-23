@@ -15,17 +15,17 @@ import static org.hamcrest.Matchers.*;
 public class CartPOM {
 
     // Store the browser driver to control the browser
-    private WebDriver driver;
+    private final WebDriver driver;
     // Store WebDriverWait to wait for elements to appear
-    private WebDriverWait wait;
+    private final WebDriverWait wait;
 
     // Locators for different elements in the cart
-    private By couponBox = By.id("coupon_code"); // Where you type a coupon
-    private By applyCouponButton = By.cssSelector("button.button[name='apply_coupon']"); // Button to apply coupon
-    private By subtotalLocator = By.cssSelector(".cart-subtotal td span.woocommerce-Price-amount"); // Subtotal amount
-    private By discountLocator = By.cssSelector(".cart-discount td span.woocommerce-Price-amount"); // Discount amount
-    private By shippingLocator = By.cssSelector("tr.shipping td span.woocommerce-Price-amount"); // Shipping cost
-    private By totalLocator = By.cssSelector(".order-total td strong span.woocommerce-Price-amount"); // Total cost
+    private final By couponBox = By.id("coupon_code"); // Where you type a coupon
+    private final By applyCouponButton = By.cssSelector("button.button[name='apply_coupon']"); // Button to apply coupon
+    private final By subtotalLocator = By.cssSelector(".cart-subtotal td span.woocommerce-Price-amount"); // Subtotal amount
+    private final By discountLocator = By.cssSelector(".cart-discount td span.woocommerce-Price-amount"); // Discount amount
+    private final By shippingLocator = By.cssSelector("tr.shipping td span.woocommerce-Price-amount"); // Shipping cost
+    private final By totalLocator = By.cssSelector(".order-total td strong span.woocommerce-Price-amount"); // Total cost
 
     // Constructor to set up CartPOM with browser driver and wait
     public CartPOM(WebDriver driver, WebDriverWait wait, Helpers helpers) {

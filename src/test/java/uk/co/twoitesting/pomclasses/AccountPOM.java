@@ -9,10 +9,10 @@ import org.openqa.selenium.*;
 public class AccountPOM {
 
     // Store the browser driver so we can control the browser
-    private WebDriver driver;
+    private final WebDriver driver;
 
     // Locate the "Logout" link on the page
-    private By logoutLink = By.linkText("Logout");
+    private final By logoutLink = By.linkText("Logout");
 
     // Constructor to set up the class with the browser driver
     public AccountPOM(WebDriver driver) {

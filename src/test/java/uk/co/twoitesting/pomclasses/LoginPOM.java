@@ -15,16 +15,16 @@ import uk.co.twoitesting.utilities.Helpers;
 public class LoginPOM {
 
     // Store the browser driver instance to control browser actions
-    private WebDriver driver;
+    private final WebDriver driver;
 
     // Store WebDriverWait instance to handle explicit waits
-    private WebDriverWait wait;
+    private final WebDriverWait wait;
 
     // Locators for login page elements
-    private By usernameField = By.id("username"); // Locator for username input field
-    private By passwordField = By.id("password"); // Locator for password input field
-    private By loginButton = By.name("login");    // Locator for login button
-    private By logoutButton = By.linkText("Logout"); // Locator for logout link (to verify login)
+    private final By usernameField = By.id("username"); // Locator for username input field
+    private final By passwordField = By.id("password"); // Locator for password input field
+    private final By loginButton = By.name("login");    // Locator for login button
+    private final By logoutButton = By.linkText("Logout"); // Locator for logout link (to verify login)
 
     // Constructor to initialize the LoginPOM with browser driver and wait
     public LoginPOM(WebDriver driver, WebDriverWait wait) {

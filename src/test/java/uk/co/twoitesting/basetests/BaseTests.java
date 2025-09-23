@@ -6,8 +6,7 @@ import org.junit.jupiter.api.*;
 // Import Selenium WebDriver classes
 import org.openqa.selenium.*;
 // Import ChromeDriver to control Chrome browser
-import org.openqa.selenium.chrome.ChromeDriver;
-// Import WebDriverWait for waiting for elements
+
 import org.openqa.selenium.support.ui.WebDriverWait;
 // Import Duration class to set timeouts
 import java.time.Duration;

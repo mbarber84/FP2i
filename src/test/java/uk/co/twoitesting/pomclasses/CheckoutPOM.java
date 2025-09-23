@@ -19,23 +19,23 @@ import uk.co.twoitesting.utilities.Helpers;
 public class CheckoutPOM {
 // Defines the CheckoutPOM class (Page Object Model for Checkout page).
 
-    private WebDriver driver;
+    private final WebDriver driver;
     // Declares WebDriver instance for controlling the browser.
 
-    private WebDriverWait wait;
+    private final WebDriverWait wait;
     // Declares WebDriverWait instance for handling explicit waits.
 
     // Locators for checkout page elements
-    private By firstNameField = By.id("billing_first_name");
-    private By lastNameField = By.id("billing_last_name");
-    private By addressField = By.id("billing_address_1");
-    private By cityField = By.id("billing_city");
-    private By postcodeField = By.id("billing_postcode");
-    private By emailField = By.id("billing_email");
-    private By phoneField = By.id("billing_phone");
-    private By paymentCheck = By.id("payment_method_cheque");
-    private By placeOrderButton = By.id("place_order");
-    private By orderNumberLocator = By.cssSelector(".order > strong");
+    private final By firstNameField = By.id("billing_first_name");
+    private final By lastNameField = By.id("billing_last_name");
+    private final By addressField = By.id("billing_address_1");
+    private final By cityField = By.id("billing_city");
+    private final By postcodeField = By.id("billing_postcode");
+    private final By emailField = By.id("billing_email");
+    private final By phoneField = By.id("billing_phone");
+    private final By paymentCheck = By.id("payment_method_cheque");
+    private final By placeOrderButton = By.id("place_order");
+    private final By orderNumberLocator = By.cssSelector(".order > strong");
 
     private boolean billingFilled = false;
     // Flag to prevent filling billing details multiple times.

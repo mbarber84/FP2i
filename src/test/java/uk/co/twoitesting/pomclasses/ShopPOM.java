@@ -14,20 +14,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static uk.co.twoitesting.utilities.Helpers.scrollIntoView;
 
 // Define ShopPOM class for actions on the shop page
 public class ShopPOM {
 
     // Store the browser driver to control the browser
-    private WebDriver driver;
+    private final WebDriver driver;
     // Store WebDriverWait to wait for elements to appear
-    private WebDriverWait wait;
+    private final WebDriverWait wait;
 
     // Locators for different elements on the shop page
-    private By shopLink = By.linkText("Shop");             // Link to open Shop page
-    private By dismissBanner = By.linkText("Dismiss");     // Link to dismiss popup/banner
-    private By poloAddButton = By.cssSelector("li.product:nth-child(9) > a:nth-child(2)"); // Button to add Polo Shirt
+    private final By shopLink = By.linkText("Shop");             // Link to open Shop page
+    private final By dismissBanner = By.linkText("Dismiss");     // Link to dismiss popup/banner
+    private final By poloAddButton = By.cssSelector("li.product:nth-child(9) > a:nth-child(2)"); // Button to add Polo Shirt
 
     // Constructor to set up ShopPOM with browser driver and wait
     public ShopPOM(WebDriver driver, WebDriverWait wait) {
