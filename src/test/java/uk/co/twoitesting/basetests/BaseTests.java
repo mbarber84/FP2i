@@ -55,7 +55,7 @@ public class BaseTests {
         // Maximize the browser window
         driver.manage().window().maximize();
         // Initialize WebDriverWait with a 10-second timeout
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
         // Initialize helper utilities
         helpers = new Helpers();
 

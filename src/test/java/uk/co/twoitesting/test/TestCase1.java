@@ -16,13 +16,17 @@ import uk.co.twoitesting.basetests.BaseTests;
 import uk.co.twoitesting.utilities.ConfigLoader;
 import uk.co.twoitesting.utilities.Helpers;
 
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 // Create a test class that extends BaseTests
 public class TestCase1 extends BaseTests {
 
-    static Stream<CouponData> couponProvider() {
+    static Stream<TestData> dataProvider() {
+        List<String> products = List.of("Polo", "Hoodie", "Beanie"); // "Belt", "Cap", "Hoodie with Logo" add as many as you like
+
+
         return Stream.of(
                 new CouponData("coupon.edgewords",
                         ConfigLoader.get("coupon.edgewords"),
@@ -30,55 +34,63 @@ public class TestCase1 extends BaseTests {
                 new CouponData("coupon.2idiscount",
                         ConfigLoader.get("coupon.2idiscount"),
                         Double.parseDouble(ConfigLoader.get("coupon.2idiscount.discount")))
+        ).flatMap(coupon ->
+                products.stream().map(product -> new TestData(coupon, product))
         );
     }
-    // Define one test method
-    //@Test
-    @Epic("Shop Tests")      // Big category for reporting
-    @Feature("Cart and Discount") // Smaller feature area
-    @Story("Purchase Polo Shirts with Discounts") // Specific user story
+
+    @Epic("Shop Tests")
+    @Feature("Cart and Discount")
+    @Story("Purchase Items with Discounts")
     @Tag("RunMe")
-    @ParameterizedTest(name = "Test {0}")   // will display coupon key in test name
-    @MethodSource("couponProvider")// Lets us filter this test by tag
-    void testPurchaseWith2iDiscount(CouponData coupon) {
+    @ParameterizedTest(name = "Test {0}")
+    @MethodSource("dataProvider")
+    void testPurchaseWithDiscount(TestData data) {
 
-        //Login
+        // Login once per test run
         Allure.step("Login to site", () -> {
-            loginPOM.open();  // Open the login page
-            loginPOM.login(); // Type username & password and click login
-            Helpers.takeScreenshot(driver, "Login Success"); // Take a screenshot for proof
-
-            // Check if page contains "Logout" to confirm login worked
-            Assertions.assertTrue(driver.getPageSource().contains("Logout"), "User should be logged in after login");
+            loginPOM.open();
+            loginPOM.login();
+            Helpers.takeScreenshot(driver, "Login Success");
+            Assertions.assertTrue(driver.getPageSource().contains("Logout"),
+                    "User should be logged in after login");
         });
 
-            Allure.step("Add Polo Shirt and apply discount: " + coupon.key(), () -> {
-                navPOM.goToShop();
-                shopPOM.dismissPopupIfPresent();
-                shopPOM.addProductToCart("Belt");
-                navPOM.goToCart();
+        Allure.step("Add " + data.product + " and apply discount " + data.coupon.key(), () -> {
+            navPOM.goToShop();
+            shopPOM.dismissPopupIfPresent();
+            shopPOM.addProductToCart(data.product);   // 🔹 dynamic product
+            navPOM.goToCart();
 
-                Helpers.takeScreenshot(driver, "Cart Before Applying " + coupon.key());
+            Helpers.takeScreenshot(driver,
+                    "Cart Before Applying " + data.coupon.key() + " for " + data.product);
 
-                System.out.println("Testing Discount: " + coupon.code() + " (" + (coupon.discount() * 100) + "%)");
+            System.out.println("Testing " + data.product +
+                    " with discount: " + data.coupon.code() +
+                    " (" + (data.coupon.discount() * 100) + "%)");
 
-                // Apply and validate coupon
-                cartPOM.applyCouponAndValidate(coupon.code(), coupon.discount());
+            // Apply and validate coupon
+            cartPOM.applyCouponAndValidate(data.coupon.code(), data.coupon.discount());
 
-                // Remove coupon & product
-                cartPOM.removeCoupon(coupon.code());
-                cartPOM.removeProduct();
+            // Remove coupon & product
+            cartPOM.removeCoupon(data.coupon.code());
+            cartPOM.removeProduct();
 
-                // Assert cart is empty
-                int cartItems = driver.findElements(By.cssSelector("tr.cart_item")).size();
-                Assertions.assertEquals(0, cartItems, "Cart should be empty after removing product");
-            });
-        };
+            // Verify cart empty
+            int cartItems = driver.findElements(By.cssSelector("tr.cart_item")).size();
+            Assertions.assertEquals(0, cartItems, "Cart should be empty after removing product");
+        });
+    }
 
-        // 🔹 Record for coupon data (Java 16+)
-        record CouponData(String key, String code, double discount) { }
+    // 🔹 Records for clean data handling
+    record CouponData(String key, String code, double discount) {}
+    record TestData(CouponData coupon, String product) {
+        @Override
+        public String toString() {
+            return product + " with " + coupon.key();
         }
-
+    }
+}
 
 //        //First coupon test
 //        Allure.step("Add item and apply first discount", () -> {

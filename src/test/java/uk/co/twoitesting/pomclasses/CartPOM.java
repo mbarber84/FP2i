@@ -35,13 +35,26 @@ public class CartPOM {
 
     // Method to apply a coupon and check that discount and total are correct
     public void applyCouponAndValidate(String couponCode, double discountRate) {
-        // Wait for the coupon box to appear
-        WebElement coupon = wait.until(ExpectedConditions.visibilityOfElementLocated(couponBox));
-        coupon.clear();               // Clear any previous text
-        coupon.sendKeys(couponCode);  // Type the coupon code
+        //Expand coupon section if hidden
+        try {
+            WebElement showCoupon = driver.findElement(By.cssSelector(".showcoupon"));
+            if (showCoupon.isDisplayed()) {
+                showCoupon.click();
+                // short wait for animation
+                Thread.sleep(500);
+            }
+        } catch (NoSuchElementException | InterruptedException ignored) {
+            // Section already visible, continue
+        }
 
-        // Click the apply coupon button
-        driver.findElement(applyCouponButton).click();
+        //Wait for input to be visible (not necessarily clickable)
+        WebElement coupon = wait.until(ExpectedConditions.visibilityOfElementLocated(couponBox));
+        coupon.clear();
+        coupon.sendKeys(couponCode);
+
+        // Click the apply button
+        WebElement applyBtn = wait.until(ExpectedConditions.elementToBeClickable(applyCouponButton));
+        applyBtn.click();
         // Wait until the discount shows up
         wait.until(ExpectedConditions.visibilityOfElementLocated(discountLocator));
 
