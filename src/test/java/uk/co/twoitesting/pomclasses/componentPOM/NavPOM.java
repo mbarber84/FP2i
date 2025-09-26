@@ -1,4 +1,4 @@
-package uk.co.twoitesting.pomclasses;
+package uk.co.twoitesting.pomclasses.componentPOM;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

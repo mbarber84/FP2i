@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+
 // Create a test class that extends BaseTests
 public class TestCase1 extends BaseTests {
 
@@ -105,7 +106,7 @@ public class TestCase1 extends BaseTests {
         });
     }
 
-    // 🔹 Records for clean data handling
+    // Records for clean data handling
     record CouponData(String key, String code, double discount) {}
     record TestData(CouponData coupon, String product) {
         @Override

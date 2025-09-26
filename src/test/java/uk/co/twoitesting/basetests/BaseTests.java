@@ -15,6 +15,7 @@ import java.time.Duration;
 import uk.co.twoitesting.pomclasses.*;
 
 // Import helper utilities
+import uk.co.twoitesting.pomclasses.componentPOM.NavPOM;
 import uk.co.twoitesting.utilities.Helpers;
 
 // Define the BaseTests class which other test classes can extend

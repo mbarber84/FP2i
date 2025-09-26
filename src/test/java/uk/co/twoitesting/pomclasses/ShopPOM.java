@@ -8,6 +8,7 @@ import io.qameta.allure.Allure;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import uk.co.twoitesting.pomclasses.componentPOM.PopUpPOM;
 import uk.co.twoitesting.utilities.Helpers;
 // Import Java classes for file handling
 import java.io.FileInputStream;
@@ -27,11 +28,13 @@ public class ShopPOM {
     private final By shopLink = By.linkText("Shop");             // Link to open Shop page
     private final By dismissBanner = By.linkText("Dismiss");     // Link to dismiss popup/banner
     private final By poloAddButton = By.cssSelector("li.product:nth-child(9) > a:nth-child(2)"); // Button to add Polo Shirt
+    private final PopUpPOM popupPom;
 
     // Constructor to set up ShopPOM with browser driver and wait
     public ShopPOM(WebDriver driver, WebDriverWait wait) {
         this.driver = driver; // Save driver
         this.wait = wait;     // Save wait
+        this.popupPom = new PopUpPOM(driver, wait);
     }
 
     // Method to open the Shop page, annotated for Allure reporting
@@ -46,18 +49,22 @@ public class ShopPOM {
         }
     }
 
-    // Method to dismiss popup/banner if it appears
-    @Step("Dismiss popup if present")
     public void dismissPopupIfPresent() {
-        try {
-            // Wait until dismiss banner is clickable, then click it
-            WebElement dismiss = wait.until(ExpectedConditions.elementToBeClickable(dismissBanner));
-            dismiss.click();
-        } catch (Exception ignored) {
-            // If no popup appears, print message
-            System.out.println("No dismiss banner found.");
-        }
+        popupPom.dismissPopupIfPresent();
     }
+
+//    // Method to dismiss popup/banner if it appears
+//    @Step("Dismiss popup if present")
+//    public void dismissPopupIfPresent() {
+//        try {
+//            // Wait until dismiss banner is clickable, then click it
+//            WebElement dismiss = wait.until(ExpectedConditions.elementToBeClickable(dismissBanner));
+//            dismiss.click();
+//        } catch (Exception ignored) {
+//            // If no popup appears, print message
+//            System.out.println("No dismiss banner found.");
+//        }
+//    }
 
 
     @Step("Add {productName} to cart")
