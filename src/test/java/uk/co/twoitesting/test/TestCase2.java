@@ -35,6 +35,9 @@ public class TestCase2 extends BaseTests {
         // Assert user is logged in
         Assertions.assertTrue(driver.getPageSource().contains("Logout"), "User should be logged in after login");
 
+        navPOM.goToCart();
+        cartPOM.removeProduct();
+
         //Add Polo Shirt to cart
         navPOM.goToShop();
         //shopPOM.openShop();               // Open shop page
