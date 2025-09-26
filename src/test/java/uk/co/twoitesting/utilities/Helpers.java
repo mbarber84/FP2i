@@ -32,7 +32,7 @@ public class Helpers {
             File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 
             // Create folder "screenshots" if it doesn't exist
-            File destDir = new File("screenshots");
+            File destDir = new File("target/screenshots");
             if (!destDir.exists()) {
                 destDir.mkdir();
             }
