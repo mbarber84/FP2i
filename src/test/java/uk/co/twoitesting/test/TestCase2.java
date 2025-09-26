@@ -6,12 +6,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 // Import base test class for setup/teardown
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import uk.co.twoitesting.basetests.BaseTests;
 // Import Checkout page object
 import uk.co.twoitesting.pomclasses.CheckoutPOM;
 // Import helper utilities
 import uk.co.twoitesting.utilities.ConfigLoader;
 import uk.co.twoitesting.utilities.Helpers;
+
+import java.time.Duration;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -50,7 +56,7 @@ public class TestCase2 extends BaseTests {
         Helpers.takeScreenshot(driver, "Cart Ready"); // Take screenshot of cart
 
         //Initialize checkout page object
-        checkoutPOM = new CheckoutPOM(driver, wait);
+        checkoutPOM = new CheckoutPOM(driver, wait, navPOM);
 
         //Go to the checkout page
         //driver.get(ConfigLoader.get("base.url") + "/checkout/");
@@ -72,9 +78,9 @@ public class TestCase2 extends BaseTests {
 
         //Go to My Account -> Orders to check if order appears
         navPOM.goToMyAccount();
-        driver.get("https://www.edgewordstraining.co.uk/demo-site/my-account/orders/");
-        boolean orderFound = driver.getPageSource().contains(orderNumber); // Check if page source contains order number
-        assertThat("Order " + orderNumber + " should appear in My Account -> Orders", orderFound, is(true));
+        // Assert the order appears in My Account -> Orders
+        assertThat("Order " + orderNumber + " should appear in My Account -> Orders",
+                checkoutPOM.isOrderPresentInMyOrders(orderNumber), is(true));
 
         // Empty the cart before logging out
         emptyCart();
@@ -84,4 +90,5 @@ public class TestCase2 extends BaseTests {
         accountPOM.logout();
         Helpers.takeScreenshot(driver, "Logged Out"); // Take screenshot after logout
     }
+
 }

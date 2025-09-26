@@ -1,19 +1,18 @@
 package uk.co.twoitesting.pomclasses;
 // Declares the package this class belongs to (Page Object Model classes for the project).
-
 import org.openqa.selenium.*;
 // Imports Selenium WebDriver core classes (WebDriver, WebElement, By, etc.).
-
 import org.openqa.selenium.support.ui.ExpectedConditions;
 // Imports ExpectedConditions to use with WebDriverWait (explicit waits).
-
 import org.openqa.selenium.support.ui.WebDriverWait;
 // Imports WebDriverWait to wait for elements before interacting with them.
-
+import uk.co.twoitesting.pomclasses.componentPOM.NavPOM;
 import uk.co.twoitesting.utilities.ConfigLoader;
 // Imports ConfigLoader to fetch billing details from config.properties.
-
 import uk.co.twoitesting.utilities.Helpers;
+import uk.co.twoitesting.pomclasses.componentPOM.NavPOM;
+import java.time.Duration;
+import java.util.List;
 // Imports Helpers utility class (e.g., for screenshots).
 
 public class CheckoutPOM {
@@ -24,6 +23,9 @@ public class CheckoutPOM {
 
     private final WebDriverWait wait;
     // Declares WebDriverWait instance for handling explicit waits.
+
+    private final NavPOM navPOM;
+
 
     // Locators for checkout page elements
     private final By firstNameField = By.id("billing_first_name");
@@ -36,11 +38,14 @@ public class CheckoutPOM {
     private final By paymentCheck = By.id("payment_method_cheque");
     private final By placeOrderButton = By.id("place_order");
     private final By orderNumberLocator = By.cssSelector(".order > strong");
+    public final By myOrdersLocator = By.cssSelector("li.woocommerce-order-overview__order.order strong");
+
+
 
     private boolean billingFilled = false;
     // Flag to prevent filling billing details multiple times.
 
-    public CheckoutPOM(WebDriver driver, WebDriverWait wait) {
+    public CheckoutPOM(WebDriver driver, WebDriverWait wait, NavPOM navPOM) {
         // Constructor: initializes CheckoutPOM with WebDriver and WebDriverWait.
 
         this.driver = driver;
@@ -48,6 +53,8 @@ public class CheckoutPOM {
 
         this.wait = wait;
         // Assigns passed WebDriverWait instance to this class.
+
+        this.navPOM = navPOM;
     }
 
     public boolean fillBillingDetailsFromConfig() {
@@ -133,7 +140,7 @@ public class CheckoutPOM {
         // Method to click the "Place Order" button.
 
         try {
-            WebElement placeOrder = wait.until(ExpectedConditions.elementToBeClickable(placeOrderButton));
+            WebElement placeOrder = wait.until(ExpectedConditions.elementToBeClickable(By.id("place_order")));
             // Waits until "Place Order" button is clickable, then finds it.
 
             placeOrder.click();
@@ -151,32 +158,63 @@ public class CheckoutPOM {
     }
 
     public String captureOrderNumber() {
-        // Method to get the order number after placing the order.
-
         try {
-            WebElement orderNumberElem = wait.until(ExpectedConditions.visibilityOfElementLocated(orderNumberLocator));
-            // Waits until order number element is visible on page.
+            // Wait until the order number is visible on the page
+            WebElement orderNumberElem = new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.visibilityOfElementLocated(orderNumberLocator));
 
-            String orderNumber = orderNumberElem.getText();
-            // Gets the order number text.
-
-            System.out.println("Order Number: " + orderNumber);
-            // Logs order number.
-
+            String orderNumber = orderNumberElem.getText().trim();
+            System.out.println("Captured Order Number: " + orderNumber);
             return orderNumber;
-            // Returns order number.
 
         } catch (Exception e) {
-            // Handles case where order number cannot be found.
-
             System.out.println("Capturing order number failed: " + e.getMessage());
-            // Logs error.
-
             Helpers.takeScreenshot(driver, "OrderNumberError");
-            // Captures screenshot for debugging.
-
             return "";
-            // Returns empty string if capture fails.
         }
     }
+
+    public boolean isOrderPresentInMyOrders(String orderNumber) {
+        try {
+            // Navigate to My Account page via NavPOM
+            navPOM.goToMyAccount();
+
+            // Click the "Orders" link
+            wait.until(ExpectedConditions.elementToBeClickable(
+                    By.cssSelector("#post-7 > div > div > nav > ul > li.woocommerce-MyAccount-navigation-link.woocommerce-MyAccount-navigation-link--orders > a")
+            )).click();
+
+            /// Wait until the orders table rows are present
+            By orderRowsLocator = By.cssSelector("table.woocommerce-orders-table tbody tr");
+            wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(orderRowsLocator, 0));
+
+            // Correct selector for order numbers
+            By orderLinksLocator = By.cssSelector("td.woocommerce-orders-table__cell-order-number a");
+            List<WebElement> orders = driver.findElements(orderLinksLocator);
+
+            // Debug: print all orders found
+            System.out.println("Orders found on My Orders page:");
+            orders.forEach(e -> System.out.println(" - " + e.getText().trim()));
+
+            // Check if any order matches
+            boolean found = orders.stream()
+                    .map(e -> e.getText().trim().replace("#", ""))
+                    .anyMatch(text -> text.equals(orderNumber));
+
+            if (!found) {
+                System.out.println("Order number " + orderNumber + " not found in My Orders.");
+                Helpers.takeScreenshot(driver, "OrderNotFound");
+            } else {
+                System.out.println("Order number " + orderNumber + " successfully found!");
+            }
+
+            return found;
+
+        } catch (Exception e) {
+            Helpers.takeScreenshot(driver, "VerifyOrderError");
+            System.out.println("Error verifying order in My Orders: " + e.getMessage());
+            return false;
+        }
+    }
+
 }
