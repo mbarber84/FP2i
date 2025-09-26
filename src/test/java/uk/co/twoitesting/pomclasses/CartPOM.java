@@ -8,8 +8,9 @@ import org.openqa.selenium.support.ui.*;
 import uk.co.twoitesting.utilities.Helpers;
 
 // Import assertion classes from Hamcrest for validating values
+import java.math.BigDecimal;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 // Define CartPOM class for actions you can do in the shopping cart
 public class CartPOM {
@@ -34,47 +35,40 @@ public class CartPOM {
     }
 
     // Method to apply a coupon and check that discount and total are correct
-    public void applyCouponAndValidate(String couponCode, double discountRate) {
-        //Expand coupon section if hidden
+    public void applyCoupon(String couponCode) {
         try {
             WebElement showCoupon = driver.findElement(By.cssSelector(".showcoupon"));
             if (showCoupon.isDisplayed()) {
                 showCoupon.click();
-                // short wait for animation
-                Thread.sleep(500);
+                wait.until(ExpectedConditions.visibilityOfElementLocated(couponBox));
             }
-        } catch (NoSuchElementException | InterruptedException ignored) {
-            // Section already visible, continue
-        }
+        } catch (NoSuchElementException ignored) { }
 
-        //Wait for input to be visible (not necessarily clickable)
         WebElement coupon = wait.until(ExpectedConditions.visibilityOfElementLocated(couponBox));
         coupon.clear();
         coupon.sendKeys(couponCode);
 
-        // Click the apply button
         WebElement applyBtn = wait.until(ExpectedConditions.elementToBeClickable(applyCouponButton));
         applyBtn.click();
-        // Wait until the discount shows up
+
         wait.until(ExpectedConditions.visibilityOfElementLocated(discountLocator));
+    }
 
-        // Get current prices from the page
-        double subtotal = Helpers.extractPrice(driver.findElement(subtotalLocator).getText());
-        double discount = Helpers.extractPrice(driver.findElement(discountLocator).getText());
-        double shipping = Helpers.extractPrice(driver.findElement(shippingLocator).getText());
-        double total = Helpers.extractPrice(driver.findElement(totalLocator).getText());
+    // Helper methods to fetch cart values
+    public BigDecimal getSubtotalBD() {
+        return Helpers.extractPrice(driver.findElement(subtotalLocator).getText());
+    }
 
-        // Calculate expected discount and total
-        double expectedDiscount = subtotal * discountRate;
-        double expectedTotal = subtotal - expectedDiscount + shipping;
+    public BigDecimal getDiscountBD() {
+        return Helpers.extractPrice(driver.findElement(discountLocator).getText());
+    }
 
-        // Print out details to the console
-        System.out.printf("Subtotal: £%.2f | Discount: £%.2f (Expected: £%.2f) | Total: £%.2f (Expected: £%.2f)%n",
-                subtotal, discount, expectedDiscount, total, expectedTotal);
+    public BigDecimal getShippingBD() {
+        return Helpers.extractPrice(driver.findElement(shippingLocator).getText());
+    }
 
-        // Check that actual discount and total match expected values (allowing tiny rounding differences)
-        assertThat("Discount should match expected", discount, closeTo(expectedDiscount, 0.01));
-        assertThat("Total should match expected", total, closeTo(expectedTotal, 0.01));
+    public BigDecimal getTotalBD() {
+        return Helpers.extractPrice(driver.findElement(totalLocator).getText());
     }
 
     // Method to remove a specific coupon from the cart
@@ -114,5 +108,6 @@ public class CartPOM {
             System.out.println("No product found in cart.");
         }
     }
+
 
 }

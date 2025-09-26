@@ -67,8 +67,6 @@ public class BaseTests {
 
         navPOM = new NavPOM(driver, wait);
 
-        // Ensure the shopping cart is empty before starting tests
-        emptyCart();
     }
 
     // Method that runs after each test

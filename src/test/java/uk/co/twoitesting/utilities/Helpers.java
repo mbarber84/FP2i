@@ -10,6 +10,7 @@ import org.openqa.selenium.io.FileHandler;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,9 +18,11 @@ import java.util.Date;
 public class Helpers {
 
     // Method to extract numeric value from a price string like "£12.34"
-    public static double extractPrice(String priceText) {
-        // Remove £ sign, minus sign, extra spaces, then convert to double
-        return Double.parseDouble(priceText.replace("£", "").replace("-", "").trim());
+    public static BigDecimal extractPrice(String priceText) {
+        // Remove £ sign, minus sign, extra spaces
+        String cleaned = priceText.replace("£", "").replace("-", "").trim();
+        // Convert to BigDecimal with 2 decimal places
+        return new BigDecimal(cleaned).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     // Method to take a screenshot, save locally, and attach to Allure report
