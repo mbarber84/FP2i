@@ -58,4 +58,6 @@ public class Helpers {
         ((JavascriptExecutor) driver).executeScript(
                 "arguments[0].scrollIntoView({block: 'center', inline: 'center'});", element);
     }
+
+
 }

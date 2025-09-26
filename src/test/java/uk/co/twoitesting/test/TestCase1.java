@@ -54,6 +54,9 @@ public class TestCase1 extends BaseTests {
             Helpers.takeScreenshot(driver, "Login Success");
             Assertions.assertTrue(driver.getPageSource().contains("Logout"),
                     "User should be logged in after login");
+            navPOM.goToCart();
+            cartPOM.removeCoupon(data.coupon.code());
+            cartPOM.removeProduct();
         });
 
         Allure.step("Add " + data.product + " and apply discount " + data.coupon.key(), () -> {
