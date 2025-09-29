@@ -6,14 +6,17 @@ import io.qameta.allure.*;
 // Import JUnit test tools
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
-// Import base test class (gives driver, wait, setup, teardown)
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
 import org.openqa.selenium.By;
+
 import uk.co.twoitesting.basetests.BaseTests;
 // Import helper classes
-import uk.co.twoitesting.utilities.ConfigLoader;
 import uk.co.twoitesting.utilities.Helpers;
+import uk.co.twoitesting.utilities.CouponData;
+import uk.co.twoitesting.utilities.*;
+
 import java.util.List;
 import java.util.stream.Stream;
 import java.math.BigDecimal;
@@ -24,17 +27,13 @@ import java.math.RoundingMode;
 public class TestCase1 extends BaseTests {
 
     static Stream<TestData> dataProvider() {
-        List<String> products = List.of("Polo"); // "Belt", "Cap", "Hoodie with Logo", "Hoodie", "Beanie" add as many as you like
+        List<String> products = List.of("Polo"); // "Belt", "Cap", etc.
 
+        // Load coupons from CSV instead of config.properties
+        List<CouponData> coupons =
+                CsvCouponLoader.loadCoupons("src/test/resources/coupons.csv");
 
-        return Stream.of(
-                new CouponData("coupon.edgewords",
-                        ConfigLoader.get("coupon.edgewords"),
-                        Double.parseDouble(ConfigLoader.get("coupon.edgewords.discount"))),
-                new CouponData("coupon.2idiscount",
-                        ConfigLoader.get("coupon.2idiscount"),
-                        Double.parseDouble(ConfigLoader.get("coupon.2idiscount.discount")))
-        ).flatMap(coupon ->
+        return coupons.stream().flatMap(coupon ->
                 products.stream().map(product -> new TestData(coupon, product))
         );
     }
@@ -88,13 +87,8 @@ public class TestCase1 extends BaseTests {
             Assertions.assertEquals(0, expectedDiscount.compareTo(discount), "Discount should match expected");
             Assertions.assertEquals(0, expectedTotal.compareTo(total), "Total should match expected");
 
-            BigDecimal actualDiscount = cartPOM.getDiscountBD(); // POM returns BigDecimal
-            BigDecimal actualTotal = cartPOM.getTotalBD();
-
             System.out.printf("Subtotal: £%.2f | Discount: £%.2f (Expected: £%.2f) | Total: £%.2f (Expected: £%.2f)%n",
                     subtotal, discount, expectedDiscount, total, expectedTotal);
-
-
 
             // Remove coupon & product
             cartPOM.removeCoupon(data.coupon.code());
@@ -106,8 +100,7 @@ public class TestCase1 extends BaseTests {
         });
     }
 
-    // Records for clean data handling
-    record CouponData(String key, String code, double discount) {}
+    // Test-specific record for product+coupon combo
     record TestData(CouponData coupon, String product) {
         @Override
         public String toString() {
@@ -115,8 +108,3 @@ public class TestCase1 extends BaseTests {
         }
     }
 }
-
-
-
-
-
