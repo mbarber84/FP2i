@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 // Import utility classes for configuration and helper functions
+import uk.co.twoitesting.pomclasses.componentPOM.NavPOM;
 import uk.co.twoitesting.utilities.ConfigLoader;
 import uk.co.twoitesting.utilities.Helpers;
 
@@ -27,7 +28,7 @@ public class LoginPOM {
     private final By logoutButton = By.linkText("Logout"); // Locator for logout link (to verify login)
 
     // Constructor to initialize the LoginPOM with browser driver and wait
-    public LoginPOM(WebDriver driver, WebDriverWait wait) {
+    public LoginPOM(WebDriver driver, WebDriverWait wait, NavPOM navPOM) {
         this.driver = driver; // Save WebDriver instance
         this.wait = wait;     // Save WebDriverWait instance
     }

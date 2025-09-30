@@ -4,6 +4,8 @@ package uk.co.twoitesting.pomclasses;
 // Import Selenium classes for working with web elements
 import org.openqa.selenium.By;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import uk.co.twoitesting.pomclasses.componentPOM.NavPOM;
 
 // Define the AccountPOM class for account-related actions
 public class AccountPOM {
@@ -15,7 +17,7 @@ public class AccountPOM {
     private final By logoutLink = By.linkText("Logout");
 
     // Constructor to set up the class with the browser driver
-    public AccountPOM(WebDriver driver) {
+    public AccountPOM(WebDriver driver, WebDriverWait wait, NavPOM navPOM) {
         this.driver = driver; // Save the driver so we can use it in this class
     }
 

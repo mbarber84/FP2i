@@ -61,10 +61,10 @@ public class BaseTests {
         helpers = new Helpers();
 
         // Initialize page objects, passing driver, wait, and helpers as needed
-        loginPOM = new LoginPOM(driver, wait);
+        loginPOM = new LoginPOM(driver, wait, navPOM);
         shopPOM = new ShopPOM(driver, wait);
-        cartPOM = new CartPOM(driver, wait, helpers);
-        accountPOM = new AccountPOM(driver);
+        cartPOM = new CartPOM(driver, wait);
+        accountPOM = new AccountPOM(driver, wait, navPOM);
 
         navPOM = new NavPOM(driver, wait);
 

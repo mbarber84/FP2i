@@ -29,7 +29,7 @@ public class CartPOM {
     private final By totalLocator = By.cssSelector(".order-total td strong span.woocommerce-Price-amount"); // Total cost
 
     // Constructor to set up CartPOM with browser driver and wait
-    public CartPOM(WebDriver driver, WebDriverWait wait, Helpers helpers) {
+    public CartPOM(WebDriver driver, WebDriverWait wait) {
         this.driver = driver; // Save driver
         this.wait = wait;     // Save wait
     }
