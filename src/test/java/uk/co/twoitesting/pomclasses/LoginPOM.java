@@ -2,15 +2,11 @@
 package uk.co.twoitesting.pomclasses;
 
 // Import Selenium classes for interacting with web elements and handling waits
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.*;
 // Import utility classes for configuration and helper functions
 import uk.co.twoitesting.pomclasses.componentPOM.NavPOM;
-import uk.co.twoitesting.utilities.ConfigLoader;
-import uk.co.twoitesting.utilities.Helpers;
+import uk.co.twoitesting.utilities.*;
 
 // Define the LoginPOM class for performing actions on the login page
 public class LoginPOM {

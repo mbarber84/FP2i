@@ -1,15 +1,10 @@
 package uk.co.twoitesting.pomclasses;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.*;
 import uk.co.twoitesting.pomclasses.componentPOM.NavPOM;
-import uk.co.twoitesting.utilities.ConfigLoader;
-import uk.co.twoitesting.utilities.Helpers;
+import uk.co.twoitesting.utilities.*;
 
-import java.time.Duration;
 
 public class CheckoutPOM {
 

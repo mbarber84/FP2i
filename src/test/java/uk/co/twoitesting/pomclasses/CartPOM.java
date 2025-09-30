@@ -10,7 +10,6 @@ import uk.co.twoitesting.utilities.Helpers;
 // Import assertion classes from Hamcrest for validating values
 import java.math.BigDecimal;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 
 // Define CartPOM class for actions you can do in the shopping cart
 public class CartPOM {

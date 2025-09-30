@@ -1,12 +1,7 @@
 package uk.co.twoitesting.utilities;
 // Declares the package this class belongs to (helps organize related classes).
 
-import java.io.FileInputStream;
-// Imports FileInputStream, which is used to read bytes from a file.
-
-import java.io.IOException;
-// Imports IOException, which handles file input/output errors.
-
+import java.io.*;
 import java.util.Properties;
 // Imports the Properties class, which is used to store key-value pairs from a config file.
 

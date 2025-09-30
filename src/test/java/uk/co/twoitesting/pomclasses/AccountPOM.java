@@ -2,9 +2,8 @@
 package uk.co.twoitesting.pomclasses;
 
 // Import Selenium classes for working with web elements
-import org.openqa.selenium.By;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 import uk.co.twoitesting.pomclasses.componentPOM.NavPOM;
 
 // Define the AccountPOM class for account-related actions

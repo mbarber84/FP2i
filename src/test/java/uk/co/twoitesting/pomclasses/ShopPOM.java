@@ -6,14 +6,12 @@ import io.qameta.allure.Step;
 import io.qameta.allure.Allure;
 // Import Selenium classes for web elements and waits
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
 import uk.co.twoitesting.pomclasses.componentPOM.PopUpPOM;
 import uk.co.twoitesting.utilities.Helpers;
 // Import Java classes for file handling
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+
 
 
 // Define ShopPOM class for actions on the shop page
@@ -52,19 +50,6 @@ public class ShopPOM {
     public void dismissPopupIfPresent() {
         popupPom.dismissPopupIfPresent();
     }
-
-//    // Method to dismiss popup/banner if it appears
-//    @Step("Dismiss popup if present")
-//    public void dismissPopupIfPresent() {
-//        try {
-//            // Wait until dismiss banner is clickable, then click it
-//            WebElement dismiss = wait.until(ExpectedConditions.elementToBeClickable(dismissBanner));
-//            dismiss.click();
-//        } catch (Exception ignored) {
-//            // If no popup appears, print message
-//            System.out.println("No dismiss banner found.");
-//        }
-//    }
 
 
     @Step("Add {productName} to cart")

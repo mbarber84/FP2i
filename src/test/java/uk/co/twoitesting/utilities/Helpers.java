@@ -1,15 +1,10 @@
 // Define the package where this class belongs
 package uk.co.twoitesting.utilities;
 
-// Import Allure classes for reporting attachments
 import io.qameta.allure.Allure;
-// Import Selenium classes for taking screenshots
 import org.openqa.selenium.*;
 import org.openqa.selenium.io.FileHandler;
-// Import Java classes for file handling and date formatting
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
