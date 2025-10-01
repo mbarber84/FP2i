@@ -1,71 +1,81 @@
 // Define the package where this class belongs
 package uk.co.twoitesting.pomclasses;
 
-// Import Selenium classes for web elements and waits
+// Import Selenium WebDriver classes for interacting with web elements
 import org.openqa.selenium.*;
+// Import Selenium support classes for explicit waits
 import org.openqa.selenium.support.ui.*;
-// Import helper utilities
+// Import helper utilities for reusable functions like price extraction
 import uk.co.twoitesting.utilities.Helpers;
 
-// Import assertion classes from Hamcrest for validating values
+// Import BigDecimal for precise financial calculations
 import java.math.BigDecimal;
 
-
-// Define CartPOM class for actions you can do in the shopping cart
+// Define CartPOM class for actions you can perform in the shopping cart
 public class CartPOM {
 
-    // Store the browser driver to control the browser
+    // WebDriver instance to control the browser
     private final WebDriver driver;
-    // Store WebDriverWait to wait for elements to appear
+    // WebDriverWait instance to wait for elements to appear or become clickable
     private final WebDriverWait wait;
 
     // Locators for different elements in the cart
-    private final By couponBox = By.id("coupon_code"); // Where you type a coupon
-    private final By applyCouponButton = By.cssSelector("button.button[name='apply_coupon']"); // Button to apply coupon
-    private final By subtotalLocator = By.cssSelector(".cart-subtotal td span.woocommerce-Price-amount"); // Subtotal amount
-    private final By discountLocator = By.cssSelector(".cart-discount td span.woocommerce-Price-amount"); // Discount amount
-    private final By shippingLocator = By.cssSelector("tr.shipping td span.woocommerce-Price-amount"); // Shipping cost
-    private final By totalLocator = By.cssSelector(".order-total td strong span.woocommerce-Price-amount"); // Total cost
+    private final By couponBox = By.id("coupon_code"); // Input field to type a coupon code
+    private final By applyCouponButton = By.cssSelector("button.button[name='apply_coupon']"); // Button to apply the coupon
+    private final By subtotalLocator = By.cssSelector(".cart-subtotal td span.woocommerce-Price-amount"); // Subtotal price element
+    private final By discountLocator = By.cssSelector(".cart-discount td span.woocommerce-Price-amount"); // Discount price element
+    private final By shippingLocator = By.cssSelector("tr.shipping td span.woocommerce-Price-amount"); // Shipping cost element
+    private final By totalLocator = By.cssSelector(".order-total td strong span.woocommerce-Price-amount"); // Total price element
 
-    // Constructor to set up CartPOM with browser driver and wait
+    // Constructor to initialize CartPOM with WebDriver and WebDriverWait
     public CartPOM(WebDriver driver, WebDriverWait wait) {
-        this.driver = driver; // Save driver
-        this.wait = wait;     // Save wait
+        this.driver = driver; // Assign the driver instance to the class variable
+        this.wait = wait;     // Assign the wait instance to the class variable
     }
 
-    // Method to apply a coupon and check that discount and total are correct
+    // Method to apply a coupon and verify that discount and total are updated
     public void applyCoupon(String couponCode) {
         try {
+            // Try to find the "Show Coupon" link if present
             WebElement showCoupon = driver.findElement(By.cssSelector(".showcoupon"));
+            // Check if the "Show Coupon" link is visible
             if (showCoupon.isDisplayed()) {
-                showCoupon.click();
-                wait.until(ExpectedConditions.visibilityOfElementLocated(couponBox));
+                showCoupon.click(); // Click to reveal the coupon input field
+                wait.until(ExpectedConditions.visibilityOfElementLocated(couponBox)); // Wait until coupon box is visible
             }
-        } catch (NoSuchElementException ignored) { }
+        } catch (NoSuchElementException ignored) {
+            // Ignore if "Show Coupon" link is not found
+        }
 
+        // Wait until the coupon input box is visible
         WebElement coupon = wait.until(ExpectedConditions.visibilityOfElementLocated(couponBox));
-        coupon.clear();
-        coupon.sendKeys(couponCode);
+        coupon.clear();          // Clear any pre-filled text in the coupon box
+        coupon.sendKeys(couponCode); // Enter the coupon code
 
+        // Wait until the Apply Coupon button is clickable
         WebElement applyBtn = wait.until(ExpectedConditions.elementToBeClickable(applyCouponButton));
-        applyBtn.click();
+        applyBtn.click();        // Click the Apply Coupon button
 
+        // Wait until the discount element becomes visible (coupon applied)
         wait.until(ExpectedConditions.visibilityOfElementLocated(discountLocator));
     }
 
-    // Helper methods to fetch cart values
+    // Helper method to fetch the subtotal from the cart as BigDecimal
     public BigDecimal getSubtotalBD() {
-        return Helpers.extractPrice(driver.findElement(subtotalLocator).getText());
+        return Helpers.extractPrice(driver.findElement(subtotalLocator).getText()); // Extract price text and convert to BigDecimal
     }
 
+    // Helper method to fetch the discount from the cart as BigDecimal
     public BigDecimal getDiscountBD() {
         return Helpers.extractPrice(driver.findElement(discountLocator).getText());
     }
 
+    // Helper method to fetch the shipping cost from the cart as BigDecimal
     public BigDecimal getShippingBD() {
         return Helpers.extractPrice(driver.findElement(shippingLocator).getText());
     }
 
+    // Helper method to fetch the total from the cart as BigDecimal
     public BigDecimal getTotalBD() {
         return Helpers.extractPrice(driver.findElement(totalLocator).getText());
     }
@@ -73,40 +83,41 @@ public class CartPOM {
     // Method to remove a specific coupon from the cart
     public void removeCoupon(String couponName) {
         try {
-            // Find the coupon row by its name
+            // Build a CSS selector for the specific coupon row based on its name
             By couponLocator = By.cssSelector("tr.cart-discount.coupon-" + couponName.toLowerCase());
+            // Find the coupon row element
             WebElement couponRow = driver.findElement(couponLocator);
-            // Click the "remove" link for that coupon
+            // Click the "remove" link inside that coupon row
             couponRow.findElement(By.cssSelector("td a")).click();
 
-            // Wait until the coupon disappears from the page
+            // Wait until the coupon row is no longer visible (removed)
             wait.until(ExpectedConditions.invisibilityOfElementLocated(couponLocator));
 
+            // Print a success message to the console
             System.out.println("Coupon removed: " + couponName);
         } catch (Exception e) {
-            // If coupon is not found, print message
+            // If coupon is not found, print a message
             System.out.println("No coupon found: " + couponName);
         }
     }
 
-    // Method to remove a product from the cart
+    // Method to remove any product from the cart
     public void removeProduct() {
         try {
-            // Locator for any product in the cart
+            // Locator for any product row in the cart
             By productLocator = By.cssSelector("tr.cart_item");
-            // Click the "remove" link for the product
+            // Find the remove button for the product
             WebElement removeBtn = driver.findElement(By.cssSelector("tr.cart_item td.product-remove a"));
-            removeBtn.click();
+            removeBtn.click(); // Click the remove button
 
-            // Wait until the product disappears from the cart
+            // Wait until the product row disappears from the cart
             wait.until(ExpectedConditions.invisibilityOfElementLocated(productLocator));
 
+            // Print a success message
             System.out.println("Product removed from cart.");
         } catch (Exception e) {
-            // If no product is found, print message
+            // If no product is found, print a message
             System.out.println("No product found in cart.");
         }
     }
-
-
 }
