@@ -90,7 +90,7 @@ public class BaseTests {
     protected void emptyCart() {
         try {
             // Navigate directly to the cart page
-            driver.get("https://www.edgewordstraining.co.uk/demo-site/cart/");
+            driver.get("base.url" + "/cart/");
             // Remove a specific coupon code named "edgewords" if applied
             cartPOM.removeCoupon("edgewords");
             // Remove another coupon code named "2idiscount" if applied

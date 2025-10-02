@@ -12,15 +12,15 @@ public class NavPOM {
     // WebDriver instance used to interact with the browser
     private WebDriver driver;
     // WebDriverWait instance used to wait for elements to be clickable or visible
-    private WebDriverWait wait;
+    private final WebDriverWait wait;
 
     // Locators for navigation links using By strategy
-    private By homeLink = By.linkText("Home");         // Locator for Home link
-    private By shopLink = By.linkText("Shop");         // Locator for Shop link
-    private By cartLink = By.linkText("Cart");         // Locator for Cart link
-    private By checkoutLink = By.linkText("Checkout"); // Locator for Checkout link
-    private By myAccountLink = By.linkText("My account"); // Locator for My Account link
-    private By blogLink = By.linkText("Blog");         // Locator for Blog link
+    private final By homeLink = By.linkText("Home");         // Locator for Home link
+    private final By shopLink = By.linkText("Shop");         // Locator for Shop link
+    private final By cartLink = By.linkText("Cart");         // Locator for Cart link
+    private final By checkoutLink = By.linkText("Checkout"); // Locator for Checkout link
+    private final By myAccountLink = By.linkText("My account"); // Locator for My Account link
+    private final By blogLink = By.linkText("Blog");         // Locator for Blog link
 
     // Constructor for NavPOM that takes WebDriver and WebDriverWait as parameters
     public NavPOM(WebDriver driver, WebDriverWait wait) {
