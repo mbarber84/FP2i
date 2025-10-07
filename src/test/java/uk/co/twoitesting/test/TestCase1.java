@@ -121,6 +121,10 @@ public class TestCase1 extends BaseTests {
             // Verify cart is empty
             int cartItems = driver.findElements(By.cssSelector("tr.cart_item")).size();
             Assertions.assertEquals(0, cartItems, "Cart should be empty after removing product");
+
+            AccountPOM accountPOM = new AccountPOM(driver, wait, navPOM); // Initialize AccountPOM
+            accountPOM.logout(); // Log out from account
+            Helpers.takeScreenshot(driver, "Logged Out"); // Screenshot after logout
         });
     }
 
